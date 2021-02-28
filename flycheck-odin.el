@@ -55,12 +55,12 @@ the format that odin check spits out"
   "Flycheck checker using odin check -vet"
   :command ("odin"
             "check"
-            (eval (flycheck-odin-check-path))
+            source
             (eval flycheck-odin-command-arguments))
   :error-patterns
   ((error line-start (file-name) "(" line ":" column ") " (message) line-end))
   :error-filter flycheck-odin-error-filter
-  :modes (odin-mode)
+  :modes odin-mode
   :predicate flycheck-buffer-saved-p)
 
 ;;;###autoload
