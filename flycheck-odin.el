@@ -25,6 +25,18 @@ Will usually be a directory, but can be a single file."
   :type '(repeat string)
   :group 'flycheck-odin)
 
+(defcustom flycheck-odin-command-list '("odin"
+                                        "check"
+                                        (eval (flycheck-odin-check-path))
+                                        (eval flycheck-odin-command-arguments))
+  "Arguments passed to the odin compiler to check the code in the project"
+  :type 'sexp
+  :group 'flycheck-odin)
+
+(defun flycheck-odin-expand-commands ()
+  (mapcan (lambda (x)
+            (flycheck-substitute-argument x 'odin)) flycheck-odin-command-list))
+
 (defun flycheck-odin-check-path ()
   (or flycheck-odin-project-path default-directory))
 
@@ -51,12 +63,13 @@ the format that odin check spits out"
      (apply-partially 'flycheck-odin-error-is-not-filtered flycheck-odin-error-filters)
      errors)))
 
+
+(flycheck-def-executable-var odin "odin")
+
 (flycheck-define-checker odin
   "Flycheck checker using odin check -vet"
   :command ("odin"
-            "check"
-            (eval (flycheck-odin-check-path))
-            (eval flycheck-odin-command-arguments))
+            (eval (flycheck-odin-expand-commands))
   :error-patterns
   ((error line-start (file-name) "(" line ":" column ") " (message) line-end))
   :error-filter flycheck-odin-error-filter
