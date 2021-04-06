@@ -69,7 +69,7 @@ the format that odin check spits out"
 (flycheck-define-checker odin
   "Flycheck checker using odin check -vet"
   :command ("odin"
-            (eval (flycheck-odin-expand-commands))
+            (eval (flycheck-odin-expand-commands)))
   :error-patterns
   ((error line-start (file-name) "(" line ":" column ") " (message) line-end))
   :error-filter flycheck-odin-error-filter
